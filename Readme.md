@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Татьяна Черданцева](https://up.htmlacademy.ru/javascript/18/user/25183).
-* Наставник: `Неизвестно`.
+* Наставник: Никита Сигов.
 
 ---
 
