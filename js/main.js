@@ -81,6 +81,46 @@ var ADVERT_3 = {
   }
 };
 
+function generateAds(amount) {
+  var ads = [];
+  for(var i = 0; i < amount; i++) {
+    var advert = {
+      "author": {
+        "avatar": "img/avatars/user0"+ (i+1) +".png"
+      },
+
+      "offer": {
+        "title": "Квартира " + (i + 1),
+        "address": "600, 350",
+        "price": 300000,
+        "type": "palace",
+        "rooms": 35,
+        "guests": 100500,
+        "checkin": "13:00",
+        "checkout": "12:00",
+        "features": ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"],
+        "description": "Все останутся довольны. Королевские апартаменты с двадцатью стеклянными балконами",
+        "photos": [
+          "http://o0.github.io/assets/images/tokyo/hotel1.jpg",
+          "http://o0.github.io/assets/images/tokyo/hotel2.jpg",
+          "http://o0.github.io/assets/images/tokyo/hotel3.jpg"
+        ],
+      },
+
+      "location": {
+        "x": 600,
+        "y": 350
+      }
+    };
+    ads.push(advert);
+  }
+  return ads;
+}
+
+console.log(generateAds(4));
+
+
+
 var ads = [ADVERT_1, ADVERT_2, ADVERT_3];
 
 
