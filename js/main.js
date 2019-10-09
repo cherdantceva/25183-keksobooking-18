@@ -42,19 +42,21 @@ function generateAds(amount) {
     "Апартаменты «Бульвар Смоленский Бульвар» расположены в Москве, в 1,8 км от улицы Арбат и в 2,8 км от храма Христа Спасителя. К услугам гостей бесплатный Wi-Fi и кондиционер."
   ];
 
-  function generateFeatures(amount, featuresAll) {
-    var featuresAllCopy = featuresAll.slice();
-    console.log('amount', amount);
-    var features = [];
-    for(var i = 0; i < amount; i++) {
-      var feature = featuresAllCopy[getRandomIntInclusive(0, featuresAllCopy.length - 1)];
-      features.push(feature);
-      console.log("featuresAllCopy1", featuresAllCopy);
-      featuresAllCopy.splice(feature, 1);
-      console.log("featuresAllCopy", featuresAllCopy);
+  function shuffleFeatures(features) {
+    for (var i = features.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = features[i];
+      features[i] = features[j];
+      features[j] = temp;
     }
     return features;
   }
+
+  function spliceFeatures(count, features) {
+    features.splice(count - 1, features.length - count);
+    return features;
+  }
+
   for(var i = 0; i < amount; i++) {
     var location = {
       "x": getRandomIntInclusive(0, MAP_WIDTH),
@@ -74,7 +76,7 @@ function generateAds(amount) {
         "guests": getRandomIntInclusive(1, 10),
         "checkin": checkin[getRandomIntInclusive(0, checkin.length - 1)],
         "checkout": checkout[getRandomIntInclusive(0, checkout.length - 1)],
-        "features": generateFeatures(getRandomIntInclusive(1, featuresAll.length), featuresAll),
+        "features": spliceFeatures(getRandomIntInclusive(1, featuresAll.length), shuffleFeatures(featuresAll.slice(0))),
         "description": description[i],
         "photos": "http://o0.github.io/assets/images/tokyo/hotel" + getRandomIntInclusive(1, 3)+".jpg",
       },
@@ -90,21 +92,14 @@ function generateAds(amount) {
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
-var template = '<button type="button" class="map__pin" style="left: 200px; top: 400px;">' +
-  '<img src="img/avatars/user07.png" width="40" height="40" draggable="false" alt="Метка объявления">' +
-  '</button>'
 
 var mapPins = document.querySelector(".map__pins");
-
-
-
 
 
 function drawPin(adsData, container) {
   var pins = document.createDocumentFragment();
 
   for (var i = 0; i < adsData.length; i++) {
-    console.log(adsData[i]);
     var newElement = document.createElement("button");
     newElement.className = "map__pin";
     newElement.setAttribute("type", "button");
