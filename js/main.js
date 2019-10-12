@@ -68,7 +68,6 @@
     } else {
       select2.setCustomValidity('');
     }
-    console.log(select1.options, select2.options);
   }
 
   adSelectRoomNumber.addEventListener('change', function () {
