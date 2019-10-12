@@ -19,7 +19,8 @@
   var mapPins = document.querySelector('.map__pins');
   var filterFormSelect = document.querySelectorAll('.map__filters .map__filter');
   var addressInput = document.querySelector('#address');
-
+  var adSelectRoomNumber = document.querySelector('#room_number');
+  var adSelectCapacity = document.querySelector('#capacity');
   function setAttributeDisabled(elements) {
     for (var i = 0; i < elements.length; i++) {
       elements[i].setAttribute('disabled', true);
@@ -27,8 +28,7 @@
   }
 
   function setAddress(input, coords) {
-    var adress = coords.x + ', ' + coords.y;
-    input.value = adress;
+    input.value = coords.x + ', ' + coords.y;
   }
 
   function getToCenterPinMain(pinMain, width, height) {
@@ -52,6 +52,36 @@
     pinMainPointerCoords.y = pinMainPointerY;
     return pinMainPointerCoords;
   }
+
+  function validateSelectsCapacity(select1, select2) {
+    var errorMesage = select2.parentNode.querySelector('.error-message');
+    if (errorMesage) {
+      errorMesage.remove();
+    }
+    var n1 = select1.options.selectedIndex;
+    var n2 = select2.options.selectedIndex;
+    if (n1 === 0 && !(n2 === 2) || (n1 === 1) && !(n2 === 1 || n2 === 2) || (n1 === 2) && (n2 === 3) || (n1 === 3) && !(n2 === 3)) {
+      select2.setCustomValidity('Количество комнат не соответствует количеству мест');
+      select2.parentNode.insertAdjacentHTML('beforeend', '<div class="error-message">' +
+        select2.validationMessage +
+        '</div>');
+    } else {
+      select2.setCustomValidity('');
+    }
+    console.log(select1.options, select2.options);
+  }
+
+  adSelectRoomNumber.addEventListener('change', function () {
+    validateSelectsCapacity(adSelectRoomNumber, adSelectCapacity);
+  });
+  adSelectCapacity.addEventListener('change', function () {
+    validateSelectsCapacity(adSelectRoomNumber, adSelectCapacity);
+  });
+  adForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    validateSelectsCapacity(adSelectRoomNumber, adSelectCapacity);
+  });
+
 
   function removeAttributeDisabled(elements) {
     for (var i = 0; i < elements.length; i++) {
