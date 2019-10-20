@@ -7,11 +7,120 @@
   var COUNT_ADS = 8;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var PIN_MAIN_WIDTH = 65;
+  var PIN_MAIN_HEIGHT = 65;
+  var PIN_MAIN_POINTER_HEIGHT = 22;
+
+  var mapPage = document.querySelector('.map');
+  var adForm = document.querySelector('.ad-form');
+  var adFormFieldsets = document.querySelectorAll('.ad-form fieldset');
+  var filterForm = document.querySelector('.map__filters');
+  var mapPinMain = document.querySelector('.map__pin--main');
+  var mapPins = document.querySelector('.map__pins');
+  var filterFormSelect = document.querySelectorAll('.map__filters .map__filter');
+  var addressInput = document.querySelector('#address');
+  var adSelectRoomNumber = document.querySelector('#room_number');
+  var adSelectCapacity = document.querySelector('#capacity');
+  function setAttributeDisabled(elements) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].setAttribute('disabled', true);
+    }
+  }
+
+  function setAddress(input, coords) {
+    input.value = coords.x + ', ' + coords.y;
+  }
+
+  function getToCenterPinMain(pinMain, width, height) {
+    var pinMainCenterCoords = {};
+    var pinMainLeft = parseFloat(getComputedStyle(pinMain).left);
+    var pinMainTop = parseFloat(getComputedStyle(pinMain).top);
+    var pinMainCenterX = Math.round(pinMainLeft + width / 2);
+    var pinMainCenterY = Math.round(pinMainTop + height / 2);
+    pinMainCenterCoords.x = pinMainCenterX;
+    pinMainCenterCoords.y = pinMainCenterY;
+    return pinMainCenterCoords;
+  }
+
+  function getToPointerPinMain(pinMain, width, height, pointerHeight) {
+    var pinMainPointerCoords = {};
+    var pinMainLeft = parseFloat(getComputedStyle(pinMain).left);
+    var pinMainTop = parseFloat(getComputedStyle(pinMain).top);
+    var pinMainPointerX = Math.round(pinMainLeft + width / 2);
+    var pinMainPointerY = Math.round(pinMainTop + height + pointerHeight);
+    pinMainPointerCoords.x = pinMainPointerX;
+    pinMainPointerCoords.y = pinMainPointerY;
+    return pinMainPointerCoords;
+  }
+
+  function validateSelectsCapacity(select1, select2) {
+    var errorMesage = select2.parentNode.querySelector('.error-message');
+    if (errorMesage) {
+      errorMesage.remove();
+    }
+    var n1 = select1.options.selectedIndex;
+    var n2 = select2.options.selectedIndex;
+    if (n1 === 0 && !(n2 === 2) || (n1 === 1) && !(n2 === 1 || n2 === 2) || (n1 === 2) && (n2 === 3) || (n1 === 3) && !(n2 === 3)) {
+      select2.setCustomValidity('Количество комнат не соответствует количеству мест');
+      select2.parentNode.insertAdjacentHTML('beforeend', '<div class="error-message">' +
+        select2.validationMessage +
+        '</div>');
+    } else {
+      select2.setCustomValidity('');
+    }
+  }
+
+  adSelectRoomNumber.addEventListener('change', function () {
+    validateSelectsCapacity(adSelectRoomNumber, adSelectCapacity);
+  });
+  adSelectCapacity.addEventListener('change', function () {
+    validateSelectsCapacity(adSelectRoomNumber, adSelectCapacity);
+  });
+  adForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    validateSelectsCapacity(adSelectRoomNumber, adSelectCapacity);
+  });
+
+
+  function removeAttributeDisabled(elements) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].removeAttribute('disabled');
+    }
+  }
+  function disablePage(map, form, fieldsets, filter, filters) {
+    map.classList.add('map--faded');
+    form.classList.add('ad-form--disabled');
+    setAttributeDisabled(fieldsets);
+    filter.classList.add('filter-form--disabled');
+    setAttributeDisabled(filters);
+  }
+  function resolvePage(map, form, fieldsets, filter, filters) {
+    map.classList.remove('map--faded');
+    form.classList.remove('ad-form--disabled');
+    removeAttributeDisabled(fieldsets);
+    filter.classList.remove('filter-form--disabled');
+    removeAttributeDisabled(filters);
+  }
+  disablePage(mapPage, adForm, adFormFieldsets, filterForm, filterFormSelect);
+  setAddress(addressInput, getToCenterPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT));
+
+  mapPinMain.addEventListener('mousedown', function () {
+    resolvePage(mapPage, adForm, adFormFieldsets, filterForm, filterFormSelect);
+    setAddress(addressInput, getToPointerPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT, PIN_MAIN_POINTER_HEIGHT));
+  });
+
+  mapPinMain.addEventListener('keydown', function (event) {
+    if (event.code === 'Enter') {
+      resolvePage(mapPage, adForm, adFormFieldsets, filterForm, filterFormSelect);
+      setAddress(addressInput, getToPointerPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT, PIN_MAIN_POINTER_HEIGHT));
+    }
+  });
 
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+
   }
 
   function generateAds(amount) {
@@ -91,14 +200,6 @@
     return ads;
   }
 
-
-  var map = document.querySelector('.map');
-  map.classList.remove('map--faded');
-
-
-  var mapPins = document.querySelector('.map__pins');
-
-
   function drawPin(adsData, container) {
     var pins = document.createDocumentFragment();
     for (var i = 0; i < adsData.length; i++) {
@@ -108,7 +209,7 @@
       newElement.style.top = adsData[i].location.y - PIN_HEIGHT + 'px';
       newElement.style.left = adsData[i].location.x - PIN_WIDTH / 2 + 'px';
       newElement.innerHTML = '<img src="' + adsData[i].author.avatar + '" width="40" height="40" draggable="false" alt="' + adsData[i].offer.title + '">';
-      pins.appendChild(newElement);
+      // pins.appendChild(newElement);
     }
     container.appendChild(pins);
   }
