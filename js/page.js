@@ -60,7 +60,6 @@
   setAddress(window.addressInput, getToCenterPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT));
 
   function mapPinMainHandler() {
-    console.log('123');
     resolvePage(window.mapPage, window.adForm, window.adFormFieldsets, window.filterForm, window.filterFormSelect);
     setAddress(window.addressInput, getToPointerPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT, PIN_MAIN_POINTER_HEIGHT));
   }
