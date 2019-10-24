@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var COUNT_ADS = 8;
+  window.COUNT_ADS = COUNT_ADS;
   window.generateAds = function (amount) {
     var ads = [];
     var title = [

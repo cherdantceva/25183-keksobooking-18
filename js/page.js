@@ -1,12 +1,9 @@
 'use strict';
 (function () {
 
-  var PIN_WIDTH = 50;
-  var PIN_HEIGHT = 70;
   var PIN_MAIN_WIDTH = 65;
   var PIN_MAIN_HEIGHT = 65;
   var PIN_MAIN_POINTER_HEIGHT = 22;
-
   var mapPinMain = document.querySelector('.map__pin--main');
   function setAddress(input, coords) {
     input.value = coords.x + ', ' + coords.y;
@@ -33,6 +30,12 @@
     pinMainPointerCoords.y = pinMainPointerY;
     return pinMainPointerCoords;
   }
+
+  function setAttributeDisabled(elements) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].setAttribute('disabled', true);
+    }
+  }
   function removeAttributeDisabled(elements) {
     for (var i = 0; i < elements.length; i++) {
       elements[i].removeAttribute('disabled');
@@ -53,11 +56,12 @@
     removeAttributeDisabled(filters);
   }
 
-  disablePage(window.mapPage, window.adForm, window.adFormFieldsets, filterForm, filterFormSelect);
+  disablePage(window.mapPage, window.adForm, window.adFormFieldsets, window.filterForm, window.filterFormSelect);
   setAddress(window.addressInput, getToCenterPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT));
 
   function mapPinMainHandler() {
-    resolvePage(window.mapPage, window.adForm, window.adFormFieldsets, filterForm, filterFormSelect);
+    console.log('123');
+    resolvePage(window.mapPage, window.adForm, window.adFormFieldsets, window.filterForm, window.filterFormSelect);
     setAddress(window.addressInput, getToPointerPinMain(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT, PIN_MAIN_POINTER_HEIGHT));
   }
 
